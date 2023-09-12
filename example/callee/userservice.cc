@@ -11,8 +11,7 @@ public:
     bool Login(std::string name, std::string pwd)
     {
         std::cout << "doing local service: Login" << std::endl;
-        std::cout << "doing local service: Login" << std::endl;
-        std::cout << "name:" << name << "pwd:" << pwd << std::endl;
+        std::cout << "name:" << name << " pwd:" << pwd << std::endl;
         return true;
     }
     // 重写基类UserServiceRpc的虚函数，下面这些方法都是框架直接调用的
