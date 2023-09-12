@@ -42,7 +42,7 @@ public:
 
 int main(int argc, char **argv)
 {
-    // 调用框架的初始化操作
+    // 调用框架的初始化操作 provider -i config.conf
     MprpcApplication::Init(argc, argv);
 
     // provider是一个rpc网络服务对象，把UserService对象发布到rpc节点上
