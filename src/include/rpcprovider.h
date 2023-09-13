@@ -9,6 +9,7 @@
 #include <muduo/net/TcpServer.h>
 #include <muduo/net/EventLoop.h>
 #include <unordered_map>
+#include "logger.h"
 
 class RpcProvider
 {

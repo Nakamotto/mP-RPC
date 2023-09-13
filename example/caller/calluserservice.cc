@@ -3,7 +3,6 @@
 #include "user.pb.h"
 #include "mprpcchannel.h"
 
-
 int main(int argc, char **argv)
 {
 
@@ -31,6 +30,22 @@ int main(int argc, char **argv)
     else
     {
         std::cout << "rpc login response error:" << response.result().errmsg() << std::endl;
+    }
+
+    fixbug::RegisterRequest reg_request;
+    reg_request.set_id(3);
+    reg_request.set_name("li si");
+    reg_request.set_pwd("321123");
+    fixbug::RegisterResponse reg_response;
+    // 同步rpc
+    stub.Register(nullptr, &reg_request, &reg_response, nullptr); // RpcChannel->RpcChannel::callMethod 集中来做所有rpc方法调用的参数序列化和网络发送
+    if (0 == reg_response.result().errcode())
+    {
+        std::cout << "rpc register response success:" << response.success() << std::endl;
+    }
+    else
+    {
+        std::cout << "rpc register response error:" << response.result().errmsg() << std::endl;
     }
     return 0;
 }

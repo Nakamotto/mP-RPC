@@ -14,14 +14,14 @@ void RpcProvider::NotifyService(google::protobuf::Service *service)
     const std::string service_name = pserviceDesc->name();
     // 获取服务对象service的方法的数量
     int methodCnt = pserviceDesc->method_count();
-    std::cout << "service_name: " << service_name << std::endl;
+    LOG_INFO("service_name: %s", service_name.c_str());
     for (int i = 0; i < methodCnt; ++i)
     {
         // 获取了服务对象指定下标的服务方法的描述，抽象描述
         const google::protobuf::MethodDescriptor *pmethodDesc = pserviceDesc->method(i);
         std::string method_name = pmethodDesc->name();
         service_info.m_methodMap.insert({method_name, pmethodDesc});
-        std::cout << "method_name: " << method_name << std::endl;
+        LOG_INFO("method_name: %s", method_name.c_str());
     }
     service_info.m_service = service;
     m_serviceMap.insert({service_name, service_info});
@@ -42,7 +42,7 @@ void RpcProvider::Run()
     // 设置muduo库的线程数量
     server.setThreadNum(4);
     // rpc服务端准备启动，打印信息
-    std::cout << "RpcServer start service at ip: " << ip << "port: " << port << std::endl;
+    std::cout << "RpcServer start service at ip: " << ip << " port: " << port << std::endl;
     // 启动网络服务
     server.start();
     m_eventLoop.loop();

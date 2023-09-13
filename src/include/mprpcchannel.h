@@ -10,6 +10,8 @@
 
 #include "rpcheader.pb.h"
 #include "mprpcapplication.h"
+#include "mprpccontroller.h"
+#include "logger.h"
 
 class MprpcChannel : public google::protobuf::RpcChannel
 {
