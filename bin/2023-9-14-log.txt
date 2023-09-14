@@ -1,0 +1,16 @@
+13:3:38: [ERROR] first log message
+13:3:38: [INFO] /home/chaoxu/2023/projects/mP-RPC/example/callee/friendservice.cc:main:48
+13:3:38: [INFO] service_name: FriendServiceRpc
+13:3:38: [INFO] method_name: GetFriendList
+13:17:2: [ERROR] first log message
+13:17:2: [INFO] /home/chaoxu/2023/projects/mP-RPC/example/callee/friendservice.cc:main:48
+13:17:2: [INFO] service_name: FriendServiceRpc
+13:17:2: [INFO] method_name: GetFriendList
+13:23:30: [ERROR] first log message
+13:23:30: [ERROR] /home/chaoxu/2023/projects/mP-RPC/example/callee/friendservice.cc:main:48
+13:23:30: [INFO] service_name: FriendServiceRpc
+13:23:30: [INFO] method_name: GetFriendList
+13:28:4: [ERROR] first log message
+13:28:4: [ERROR] /home/chaoxu/2023/projects/mP-RPC/example/callee/friendservice.cc:main:48
+13:28:4: [INFO] service_name: FriendServiceRpc
+13:28:4: [INFO] method_name: GetFriendList

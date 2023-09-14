@@ -1,6 +1,6 @@
-#include "rpcprovider.h"
+#include "mprpcprovider.h"
 #include "mprpcapplication.h"
-#include "rpcheader.pb.h"
+#include "mprpcheader.pb.h"
 
 // service_name => service描述 => <service*, 多个method_name>
 // 这里是框架提供给外部使用的，可以发布rpc方法的函数接口
@@ -41,6 +41,29 @@ void RpcProvider::Run()
     server.setMessageCallback(std::bind(&RpcProvider::onMessage, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
     // 设置muduo库的线程数量
     server.setThreadNum(4);
+
+    // 把当前rpc节点上要发布的服务全部注册到zk上面，让rpc client可以从zk上发现服务
+    // session time out 30s zkclient网络I/O线程 1/3 * timeout 时间发送ping的消息
+    ZkClient zkCli;
+    zkCli.Start();
+    // service_name为永久性节点， method_name为临时性节点
+    for (const auto &sp : m_serviceMap)
+    {
+        // /servicename
+        std::string service_path = "/" + sp.first;
+        zkCli.Create(service_path.c_str(), nullptr, 0);
+        for (const auto &mp : sp.second.m_methodMap)
+        {
+            // /service_name/method_name
+            std::string method_path = service_path + "/" + mp.first;
+            char method_path_data[128] = {0};
+            // 存储当前这个rpc服务节点主机的ip和port
+            sprintf(method_path_data, "%s:%d", ip.c_str(), port);
+            // ZOO_EPHEMERAL表示znode是一个临时性节点
+            zkCli.Create(method_path.c_str(), method_path_data, strlen(method_path_data), ZOO_EPHEMERAL);
+        }
+    }
+
     // rpc服务端准备启动，打印信息
     std::cout << "RpcServer start service at ip: " << ip << " port: " << port << std::endl;
     // 启动网络服务
@@ -57,7 +80,7 @@ void RpcProvider::onConnection(const muduo::net::TcpConnectionPtr &conn)
     }
 }
 
-// 在框架内部，rpcprovider和rpcconsumer协商好之间通信用的protobuf数据类型
+// 在框架内部，mprpcprovider和rpcconsumer协商好之间通信用的protobuf数据类型
 // service_name method_name args 定义proto的message类型，进行数据头序列化和反序列化
 // header_size(4 bytes) + header_str + args_str
 // header_str: service_name method_name args_name
@@ -91,13 +114,13 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr &conn, muduo::net
 
     std::string args_str = recv_buf.substr(4 + header_size, args_size);
     // 打印调试信息
-    std::cout << "=============================" << std::endl;
-    std::cout << "header_size: " << header_size << std::endl;
-    std::cout << "rpc_header_str: " << rpc_header_str << std::endl;
-    std::cout << "service_name: " << service_name << std::endl;
-    std::cout << "method_name: " << method_name << std::endl;
-    std::cout << "args_str: " << args_str << std::endl;
-    std::cout << "=============================" << std::endl;
+    // std::cout << "=============================" << std::endl;
+    // std::cout << "header_size: " << header_size << std::endl;
+    // std::cout << "rpc_header_str: " << rpc_header_str << std::endl;
+    // std::cout << "service_name: " << service_name << std::endl;
+    // std::cout << "method_name: " << method_name << std::endl;
+    // std::cout << "args_str: " << args_str << std::endl;
+    // std::cout << "=============================" << std::endl;
 
     // 获取service对象和method对象
     auto it = m_serviceMap.find(service_name);
@@ -139,7 +162,7 @@ void RpcProvider::SendRpcResponse(const muduo::net::TcpConnectionPtr &conn, goog
     if (response->SerializeToString(&response_str))
     {
         conn->send(response_str);
-        conn->shutdown(); // 模拟http的短链接服务，由rpcprovider主动断开连接
+        conn->shutdown(); // 模拟http的短链接服务，由mprpcprovider主动断开连接
     }
     else
     {

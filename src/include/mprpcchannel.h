@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "rpcheader.pb.h"
+#include "mprpcheader.pb.h"
 #include "mprpcapplication.h"
 #include "mprpccontroller.h"
 #include "logger.h"

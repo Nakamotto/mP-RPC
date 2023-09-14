@@ -1,6 +1,7 @@
 #include <iostream>
 #include "friend.pb.h"
 #include "mprpcapplication.h"
+#include "zookeeperutil.h"
 
 int main(int argc, char **argv)
 {

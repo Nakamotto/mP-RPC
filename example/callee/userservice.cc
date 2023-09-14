@@ -2,7 +2,7 @@
 #include <string>
 #include "user.pb.h"
 #include "mprpcapplication.h"
-#include "rpcprovider.h"
+#include "mpmprpcprovider.h"
 // 原来是一个本地服务，提供两个进程内的本地方法，Login和GetFriendLists
 
 class UserService : public fixbug::UserServiceRpc // 使用在rpc服务的发布端（rpc服务提供者）
