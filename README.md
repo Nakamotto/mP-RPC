@@ -22,6 +22,7 @@ it may cause compile error. If that happens, please remove string `"-Werror"` in
 ```shell
 #start zookeeper service locally
 #Please ensure that port 2181 is not in use
+tar -xvf zookeeper.tar
 cd zookeeper-3.4.10/bin
 ./zkServer.sh start
 
